@@ -8,6 +8,8 @@ Blogging app that allows a user to:
 - Delete a blog 
 - View Posts in a chronological order 
 - User has many posts
+- A Post has many Likes
+- A Post belongs to a User
 
 MVP:
     - New post
@@ -27,7 +29,9 @@ Strech goals:
     - Comments
 
 Model:
-    User---<Post>---PostLike---<Like
+    User---<Like>---<Post
+    -Like is the joiner
+
 
         User:
         -Name
@@ -37,10 +41,11 @@ Model:
         -Name
         -Date
         -Content
-
-    PostLike:
-        -PostID
-        -LikeID
+    
 
     Like:
         -User associated with like?
+        -postId
+        -userId
+
+
