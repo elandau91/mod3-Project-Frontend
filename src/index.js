@@ -3,7 +3,7 @@ let currentUserId;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     const URL = "http://localhost:3000/posts/"
-    const LIKE_URL = "http://localhost:3000/likes"
+    const LIKE_URL = "http://localhost:3000/likes/"
 
     function getPosts() {
         const postContainer = document.querySelector(".post-container")
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             e.preventDefault()
             if (e.target.className === 'btn btn-primary' || e.target.className === "fa fa-hear fa-heart") {
                 const postBox = e.target.closest("div").parentElement.parentElement
-                console.log(postBox)
+                
 
                 postLike(postBox)
             }
@@ -58,23 +58,23 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     function postLike(postBox) {
         const postId = postBox.dataset.id
-
+        
         const options = {
             method: "POST",
             headers: {
                 "content-type": "application/json",
-                "accept": "application/json"
+                "accept": "application/json",
             },
             body: JSON.stringify({
-                user_id: currentUserId,
-                post_id: postId
+                user_id: parseInt(currentUserId),
+                post_id: parseInt(postId)
             })
         }
 
-        // fetch(LIKE_URL, options)
-        // .then(res => {
-        //     getPosts()
-        // })
+        fetch("https://localhost:3000/likes/", options)
+        .then(res => {
+            getPosts()
+        })
     }
 
     likeHandler()
