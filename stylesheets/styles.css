@@ -1,0 +1,33 @@
+.nav-item.dropdown {
+    margin-right: 70px;
+}
+
+body {
+    color: black;
+}
+
+.card {
+    margin: 20px 10%;
+}
+
+.btn.btn-primary {
+    display: inline-block;
+    /* margin-left: 90%; */
+}
+
+.btn.btn-secondary {
+    display: inline-block;
+    /* margin-left: 90%; */
+}
+
+.buttons {
+    margin-left: 80%;
+}
+
+#username {
+    display: inline-block;
+}
+
+.likes {
+    margin-left: 90%;
+}
