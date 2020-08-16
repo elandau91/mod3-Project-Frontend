@@ -1,6 +1,7 @@
 const currentPosts = [];
 let currentUserId;
 
+
 document.addEventListener("DOMContentLoaded", function(e) {
     const URL = "http://localhost:3000/posts/"
     const LIKE_URL = "http://localhost:3000/likes/"
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     let likeHandler = () => {
         document.addEventListener('click', function(e) {
-            e.preventDefault()
+            // e.preventDefault()
             if (e.target.className === 'btn btn-primary' || e.target.className === "fa fa-hear fa-heart") {
                 const postBox = e.target.closest("div").parentElement.parentElement
                 
@@ -71,10 +72,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
             })
         }
 
-        fetch("https://localhost:3000/likes/", options)
-        .then(res => {
-            getPosts()
-        })
+        fetch(LIKE_URL, options)
+        .then(res => 
+            getPosts())
     }
 
     likeHandler()
