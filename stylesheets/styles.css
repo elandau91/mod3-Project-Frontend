@@ -13,12 +13,24 @@ body {
 .btn.btn-primary {
     display: inline-block;
     /* margin-left: 90%; */
+    transition: background-color 0.5s ease-in-out;
+}
+
+.btn.btn-primary:hover {
+    background-color: gray;
+    color: blue
 }
 
 .btn.btn-secondary {
     display: inline-block;
     /* margin-left: 90%; */
+    transition: background-color 0.5s ease-in-out;
 }
+
+.btn.btn-secondary:hover {
+    background-color: blue;
+}
+
 
 .buttons {
     margin-left: 80%;
@@ -30,4 +42,8 @@ body {
 
 .likes {
     margin-left: 90%;
+}
+
+li {
+    list-style-type: none;
 }
