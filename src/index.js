@@ -37,9 +37,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
               <h6 class="card-title likes" id='username'>Likes: <span>${post.likes.length}</span></h6>
               <h6 class="card-title" id='date'><em>${post.date}</em></h6>
               <p class="card-text">${post.content}</p>
-              <div class="buttons">
-                <a href="#" class="btn btn-secondary">Comments</i></a>
+              <div class="buttons" dataset-id="${post.id}">
                 <a href="#" class="btn btn-primary"><i class="fa fa-hear fa-heart"></i></a>
+                <a href="#" class="btn btn-secondary"><i class="fa fa-comment"></i></a>
+                <a href="#" class="btn btn-success"><i class="fa fa-edit"></i></a>
                 <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
               </div>
               <ul id="comments">
@@ -84,8 +85,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
         document.addEventListener('click', function(e) {
             e.preventDefault()
             
-            if (e.target.matches(".btn.btn-secondary")) {
-                let commentUl = e.target.parentElement.parentElement.querySelector('ul')
+            if (e.target.matches(".btn.btn-secondary") || e.target.className  === "fa fa-comment") {
+                let commentUl = e.target.parentElement.parentElement.parentElement.querySelector('ul')
+                
+                
                     if (commentUl.style.display === 'block') {
                         commentUl.style.display = 'none'
                     } else {
@@ -174,10 +177,38 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 console.log(newComment)
 
                 postComment(newComment)
+            } else if (e.target.value === "Submit Edits") {
+                e.preventDefault()
+                let id = e.target.parentElement.parentElement.parentElement.parentElement.dataset.id
+                let oldData = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("p")
+                let edits = e.target.parentElement.querySelector("textarea").value
+                
+                editPost(edits, id, oldData)
             }
 
         })
 
+    }
+
+    const editPost=(newContent, postid, oldData)=> {
+        let form = oldData.parentElement.querySelector("form")
+        
+        const options = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                content: newContent 
+            })
+        }
+
+        fetch(URL + postid, options)
+            .then(resp => {
+                oldData.innerText = newContent
+                form.remove()
+            })
     }
 
     function postComment(newComment) {
@@ -283,16 +314,46 @@ document.addEventListener("DOMContentLoaded", function(e) {
     }
         
 
+    function editHandler() {
+        document.addEventListener("click", function(e) {
+            if (e.target.matches(".btn.btn-success") || e.target.matches(".fa.fa-edit")) {
+                 let buttons = e.target.parentElement.parentElement.parentElement.querySelector(".buttons")
+                let container = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top")
+                 let title = container.querySelector(".card-header")
+                 let name = container.querySelector(".card-title")
+                 let date = container.querySelector("em")
+                 let content = container.querySelector("p")
 
+                
+                 let edit = document.createElement("form")
+                 edit.classList.add("form")
+                 edit.innerHTML = `                  
+                    
+                    <label for="content">Content:</label><br>
+                    <textarea type="text" id="content" name="content">${content.innerText}</textarea>
+                    <br>
+                    <input type="submit" value="Submit Edits">
+                 `
+                $(edit).insertAfter(buttons)
+                
+            }
+        })
+    }
+
+
+
+    newPost=()=> {
+
+        
+    }
+
+    editHandler()
     deleteHandler()
     commentButtonHandler()
     profileHandler()
     likeHandler()
     submitHandler()
     getPosts()
-
-
-
 
     
 })

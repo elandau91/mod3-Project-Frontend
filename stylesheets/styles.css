@@ -4,15 +4,16 @@
 
 body {
     color: black;
+    /* padding-top: %; */
 }
 
 .card {
-    margin: 20px 10%;
+    margin: 3% 10%;
 }
 
-.profile-container {
+/* .profile-container {
     margin: 10% 10%;
-}
+} */
 
 .btn.btn-primary {
     display: inline-block;
@@ -75,4 +76,21 @@ li {
 .btn-warning {
     display: inline-block;
     margin-left: 37%
+}
+
+#post-content {
+    margin: auto;
+}
+
+#pageNav {
+    margin-top: 5%;
+}
+
+.form {
+    margin-left: 5%;
+}
+
+textarea {
+    resize: horizontal;
+    width: 90%;
 }
