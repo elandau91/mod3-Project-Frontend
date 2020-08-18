@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         postCard.dataset.id = post.id
 
         postCard.innerHTML = `
+        <div class="box stack-top">
         <h5 class="card-header">${post.title}</h5>
             <div class="card-body">
               <h5 class="card-title" id='username'>Bob</h5>
@@ -39,9 +40,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
               <div class="buttons">
                 <a href="#" class="btn btn-secondary">Comments</i></a>
                 <a href="#" class="btn btn-primary"><i class="fa fa-hear fa-heart"></i></a>
+                <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
               </div>
               <ul id="comments">
               </ul>
+            </div>
             </div>
         `
 
@@ -58,6 +61,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 commentUl.appendChild(commentCont)
                 commentUl.appendChild(commentName)
                 commentUl.appendChild(commentHr)
+
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
                 
                 
 
@@ -98,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
                             form.remove()
                     }
 
-                    }
+                }
 
               }
 
@@ -215,7 +223,68 @@ document.addEventListener("DOMContentLoaded", function(e) {
         })
     }
 
-  
+
+    function deleteHandler() {
+        document.addEventListener("click", function(e) {
+            
+            
+            if (e.target.matches(".btn.btn-danger") || e.target.matches(".fa.fa-trash")) {
+                    let cardBox = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(".card-body")
+                    
+                    cardBox.style.opacity = .1
+                    cardBox.style.backgroundColor = "gray"
+
+                    let confirmDelete = document.createElement("button")
+                    confirmDelete.classList.add("btn-warning", "btn")
+                    confirmDelete.innerText = "Confirm Deletion?"
+
+
+                    let cancelDelete = document.createElement("button")
+                    cancelDelete.classList.add("btn-info", "btn")
+                    cancelDelete.innerText = "Cancel"
+
+                    let cardContainer = cardBox.parentElement
+                    let postHeader = cardContainer.querySelector(".card-header")
+
+                $(cancelDelete).insertAfter(postHeader)
+                $(confirmDelete).insertAfter(postHeader) 
+               
+
+            } else if (e.target.matches(".btn.btn-info")) {
+                let cardBox = e.target.parentElement.parentElement.querySelector(".card-body")
+
+                cardBox.style.opacity = ""
+                cardBox.style.backgroundColor = ""
+                let cancelButton = e.target.previousElementSibling
+                let confirmButton = e.target
+                cancelButton.remove()
+                confirmButton.remove()
+
+            } else if (e.target.matches(".btn.btn-warning")) {
+                let post = e.target.parentElement.parentElement
+
+                deletePost(post)
+            }
+        })
+    }
+
+    const deletePost = (post)=> {
+        let postid = post.dataset.id
+
+        const fetchOptions = {
+            method: "DELETE"
+        }
+
+        fetch(URL + postid, fetchOptions)
+            .then(resp => {
+                post.remove()
+            })
+            
+    }
+        
+
+
+    deleteHandler()
     commentButtonHandler()
     profileHandler()
     likeHandler()
