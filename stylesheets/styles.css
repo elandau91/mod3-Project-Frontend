@@ -10,6 +10,10 @@ body {
     margin: 20px 10%;
 }
 
+.profile-container {
+    margin: 10% 10%;
+}
+
 .btn.btn-primary {
     display: inline-block;
     /* margin-left: 90%; */
@@ -47,3 +51,4 @@ body {
 li {
     list-style-type: none;
 }
+

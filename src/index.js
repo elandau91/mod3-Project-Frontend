@@ -208,11 +208,23 @@ document.addEventListener("DOMContentLoaded", function(e) {
             })
     }
 
-
+    const profileHandler = () => {
+        document.addEventListener('click', function(e) {
+            if (e.target.textContent === "Profile") {}
+            
+        })
+    }
 
   
     commentButtonHandler()
+    profileHandler()
     likeHandler()
     submitHandler()
     getPosts()
+
+
+
+
+    
 })
+
