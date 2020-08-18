@@ -15,7 +15,7 @@
   <body>
     <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
         <div class="mx-auto order-0">
-            <a class="navbar-brand mx-auto" href="#">Blog</a>
+            <a class="navbar-brand mx-auto" href="#" data-slide-to="0" data-target="#pageNav">Blog</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -27,8 +27,8 @@
                         <i class="fa fa-user-circle"></i>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="#carouselExampleControls" role="button" data-slide="next">Profile</a>
-                      <a class="dropdown-item" href="#">New Post</a>
+                      <a class="dropdown-item" href="#" role="button" data-slide-to="2" data-target="#pageNav">Profile</a>
+                      <a class="dropdown-item" href="#" role="button" data-slide-to="1" data-target="#pageNav">New Post</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">Logout</a>
                     </div>
@@ -41,18 +41,28 @@
 
 
 
-    <div id="carouselExampleControls" class="carousel slide" data-ride="false">
+    <div id="pageNav" class="carousel slide" data-wrap="false">
+
       <div class="carousel-inner">
+
         <div class="carousel-item active">
           <div class="post-container">
             <!-- POSTS GET RENDERED HERE -->
-
           </div>
-
         </div>
-        <!-- <div class="carousel-item">
-          <!-- TRANSITION ANIMATION GOES HERE -->
-        <!-- </div> --> -->
+
+        <div class="carousel-item">
+          <div class="card">
+            <h5 class="card-header">New Post</h5>
+              <div class="card-body">
+                <form>
+                  <input type="textarea" id="post-content" name="content"><br>
+                  <input type="submit">
+                </form>
+              </div>
+          </div>
+        </div>
+
         <div class="carousel-item">
           <!-- PROFILE PAGE GOES HERE -->
           <div class="profile-container">
@@ -62,15 +72,8 @@
             </div>
           </div>
         </div>
+
       </div>
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <!-- <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span> -->
-      </a>
     </div>
 
 
