@@ -4,20 +4,15 @@
 
 body {
     color: black;
-    z-index: 10;
-    /* padding-top: %; */
 }
 
 .card {
-    z-index: 5;
     margin: 3% 10%;
     box-shadow: 0 2.5rem 2rem -2rem hsl(200 50% 20% / 40%);
-
 }
 
 .profile-container {
     margin: 10% 10%;
-    /* border: 1px solid; */
 }
 
 .btn.btn-primary {
@@ -46,6 +41,7 @@ body {
 
 .buttons {
     margin-left: 80%;
+    display: inline-block;
 }
 
 #username {
@@ -71,7 +67,7 @@ li {
 }
 .stack-top{
     z-index: 9;
-    margin: 20px; /* for demo purpose  */
+    /* margin: 20px; for demo purpose  */
     /* background-color: gray; */
 }
 
@@ -92,6 +88,7 @@ li {
 
 #pageNav {
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .form {
@@ -111,3 +108,18 @@ textarea {
 .llp {
     display: inline-block;
 }
+/* 
+.popover {
+    width: 200px;
+    height: 200px;
+} */
+
+img {
+    width: 200px;
+    height: 200px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    padding: 2px 2px;
+  }

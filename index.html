@@ -55,16 +55,21 @@
           <div class="card">
             <h5 class="card-header">New Post</h5>
               <div class="card-body">
-                <!-- <form>
-                  <textarea type="text" id="post-content" name="content"></textarea><br>
-                  <input type="submit"> -->
                   <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">Submit</button>
-                    </div>
-                    <textarea class="form-control" aria-label="With textarea"></textarea>
+                    <input type="text" class="form-control" id='post-title' placeholder="Post Title">
                   </div>
-                <!-- </form> -->
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="Your URL Here">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
+                      </div>
+                    </div>
+                  <div class="input-group mb-3">
+                    <textarea class="form-control" id='post-content'placeholder="Post Content" spell-aria-label="With textarea"></textarea>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button" id="button-addon2" name="new-post-submit">Submit</button>
+                    </div>
+                  </div>
               </div>
           </div>
         </div>
@@ -79,9 +84,48 @@
 
 
         <div class="carousel-item">
-          <div class="card">
+          <div class="card" align="center">
             <h5 class="card-header">About Us</h5>
               <div class="card-body">
+                <p>This site was made in 5 days as part a of student project for Mod3 of Flatiron School's Software Development course.</p>
+                <ul>
+                  <li>* JavaScript - FrontEnd *</li>
+                  <li>* Ruby on Rails - BackEnd *</li>
+                  
+                </ul>
+                <p>In collaboration between Eli Landau and Dmitry Sychev</p><br>
+            
+
+                <table align="center">
+                  <thead>
+                    <tr>
+                    <th>Contacts</th>
+                    <th>Eli Landau</th>
+                    <th>Dmitry Sychev</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td>Email:</td>
+                        <td>eli.b.landau@gmail.com</td>
+                        <td>dmitry.sychev@me.com</td>
+                      </tr>
+                      <tr>
+                    <td>GitHub:</td>
+                        <td><a href="https://www.linkedin.com/in/elilandau/"><i class="fa fa-github-square fa-lg"></i></a></td>
+                        <td><a href="https://github.com/axiumone"><i class="fa fa-github-square fa-lg"></i></a></td>
+                      </tr>
+                      <tr>
+                    <td>LinkedIn:</td>
+                    <td><a href="https://github.com/elandau91"><i class="fa fa-linkedin fa-lg"></i></a></td>
+                    <td><a href="https://www.linkedin.com/in/dmitry-sychev-9593aa1a/"><i class="fa fa-linkedin fa-lg"></i></a></td>
+                  </tr>
+                    </tbody>
+                </table>
+
+                 
+                    
+            
               </div>
           </div>
         </div>

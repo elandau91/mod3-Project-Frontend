@@ -17,17 +17,27 @@ document.addEventListener("DOMContentLoaded", function(e) {
             posts.forEach(post => {
             currentPosts.push(post)
             })
-        let sortedPosts = currentPosts.sort((a, b) => parseInt(a.date.split("-").join("")) - parseInt(b.date.split("-").join("")))
+        let sortedPosts = currentPosts.sort((a, b) => parseInt(b.date.split("-").join("")) - parseInt(a.date.split("-").join("")))
        
-        sortedPosts.forEach(post => renderPost(post, postContainer))
+            sortedPosts.forEach(post => renderPost(post, postContainer))
         })
     }
 
     function renderPost(post, postContainer) {
-        currentUserId = post.user_id
+              currentUserId = post.user_id
+
         const postCard = document.createElement("div") 
-        postCard.classList.add("card")
-        postCard.dataset.id = post.id
+
+              postCard.classList.add("card")
+              postCard.dataset.id = post.id
+
+
+            $('[data-toggle="popover-hover"]').popover({
+                html: true,
+                trigger: 'hover',
+                placement: 'bottom',
+                content: function () { return '<img src="' + $(this).data('img') + '" />'; }
+              });
 
         postCard.innerHTML = `
         
@@ -38,11 +48,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
               <h6 class="card-title likes" id='username'>Likes: <span>${post.likes.length}</span></h6>
               <h6 class="card-title" id='date'><em>${post.date}</em></h6>
               <p class="card-text">${post.content}</p>
+              <a id="popover" class="fa fa-image fa-lg" rel="popover" data-toggle="popover-hover" data-placement="bottom" data-img="${post.img_url}"></a>
               <div class="buttons" dataset-id="${post.id}">
-                <a href="#" class="btn btn-primary"><i class="fa fa-hear fa-heart"></i></a>
-                <a href="#" class="btn btn-secondary"><i class="fa fa-comment"></i></a>
-                <a href="#" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                <a href="#" class="fa fa-hear fa-heart fa-lg"></a>
+                <a href="#" class="fa fa-comment fa-lg"></a>
+                <a href="#" class="fa fa-edit fa-lg"></a>
+                <a href="#" class="fa fa-trash fa-lg"></a>
               </div>
               <ul id="comments">
               </ul>
@@ -63,12 +74,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 commentUl.appendChild(commentCont)
                 commentUl.appendChild(commentName)
                 commentUl.appendChild(commentHr)
-
-
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })
-                
+ 
                 
 
         }   
@@ -86,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         document.addEventListener('click', function(e) {
             e.preventDefault()
             
-            if (e.target.matches(".btn.btn-secondary") || e.target.className  === "fa fa-comment") {
+            if (e.target.className  === "fa fa-comment fa-lg") {
                 let commentUl = e.target.parentElement.parentElement.parentElement.querySelector('ul')
                 
                 
@@ -123,10 +129,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
         let editForm = document.createElement("form")
 
         editForm.innerHTML = `
-        <label for="content">Content:</label><br>
-        <textarea type="text" id="content" name="content"></textarea>
-        <br>
-        <input type="submit" value="Submit">
+        <div class="input-group mb-3">
+            <textarea class="form-control" id='post-content'placeholder="Post Content" spell-aria-label="With textarea"></textarea>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" name="new-comment-submit">Submit</button>
+                </div>
+        </div>
         `
 
         ul.append(editForm)
@@ -136,9 +144,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
     let likeHandler = () => {
         document.addEventListener('click', function(e) {
             // e.preventDefault()
-            if (e.target.className === 'btn btn-primary' || e.target.className === "fa fa-hear fa-heart") {
+            if (e.target.className === "fa fa-hear fa-heart fa-lg") {
                 const postBox = e.target.closest("div").parentElement.parentElement
-                
+        
                 postLike(postBox)
             }
         })
@@ -150,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         
        let likes = postBox.querySelector('.card-title.likes > span')
        likes.innerText = `${parseInt(likes.innerText) +1}`
-       
+
         const options = {
             method: "POST",
             headers: {
@@ -172,9 +180,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
     function submitHandler() {
         document.addEventListener('click', function(e) {
   
-            if (e.target.value === "Submit") {
+            if (e.target.name === "new-comment-submit") {
                 e.preventDefault()
-                let newComment = e.target.parentElement.querySelector('textarea') //.value for value
+
+                let newComment = e.target.parentElement.parentElement.querySelector('textarea') //.value for value
                 console.log(newComment)
 
                 postComment(newComment)
@@ -186,6 +195,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 let edits = e.target.parentElement.parentElement.parentElement.querySelector('.form-control').value
                 
                 editPost(edits, id, oldData)
+            } else if (e.target.name === "new-post-submit"){
+                let title = document.querySelector('#post-title'),
+                    content = document.querySelector('#post-content')
+                    img = document.querySelector('#basic-url')
+                    newPost(title, content, img)
+
             }
 
         })
@@ -214,9 +229,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
     }
 
     function postComment(newComment) {
-        let postId = newComment.parentElement.parentElement.parentElement.parentElement.dataset.id
-            
-
+        let postId = newComment.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.id
+ 
         const options = {
             method: "POST",
             headers: {
@@ -236,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 let commentCont = document.createElement('li'),
                     commentHr = document.createElement('hr'),
                     commentName = document.createElement('p'),
-                    ul = newComment.parentElement.parentElement,
+                    ul = newComment.parentElement.parentElement.parentElement,
                     lastLi = ul.querySelector('.btn.btn-dark')
 
                     commentCont.textContent = newComment.value
@@ -246,6 +260,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
                     ul.insertBefore(commentName, lastLi)
                     ul.insertBefore(commentHr, lastLi)
 
+                    newComment.parentElement.parentElement.remove()
+                    lastLi.innerText = "Add Comment"
             })
     }
 
@@ -261,15 +277,15 @@ document.addEventListener("DOMContentLoaded", function(e) {
         document.addEventListener("click", function(e) {
             
             
-            if (e.target.matches(".btn.btn-danger") || e.target.matches(".fa.fa-trash")) {
+            if (e.target.matches(".fa.fa-trash.fa-lg")) {
                     let cardBox = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(".card-body")
                     
-                    cardBox.style.opacity = .1
-                    cardBox.style.backgroundColor = "gray"
+                        cardBox.style.opacity = .1
+                        cardBox.style.backgroundColor = "gray"
 
                     let confirmDelete = document.createElement("button")
-                    confirmDelete.classList.add("btn-warning", "btn")
-                    confirmDelete.innerText = "Delete Post?"
+                        confirmDelete.classList.add("btn-warning", "btn")
+                        confirmDelete.innerText = "Delete Post?"
 
 
                     let cancelDelete = document.createElement("button")
@@ -318,39 +334,70 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     function editHandler() {
         document.addEventListener("click", function(e) {
-            if (e.target.matches(".btn.btn-success") || e.target.matches(".fa.fa-edit")) {
-                 let buttons = e.target.parentElement.parentElement.parentElement.querySelector(".buttons")
-                 let container = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top")
-                 let title = container.querySelector(".card-header")
-                 let name = container.querySelector(".card-title")
-                 let date = container.querySelector("em")
-                 let content = container.querySelector("p")
 
-                
-                 let edit = document.createElement("form")
-                 edit.classList.add("form")
-                 edit.innerHTML = `                  
+            if (e.target.matches(".fa.fa-edit")) {
+
+                if (document.querySelector('.form') !== null ) {
+                    document.querySelector('.form').remove()
+                } else {
+                 let edit = document.createElement("form"),
+                     buttons = e.target.parentElement.parentElement.parentElement.querySelector(".buttons"),
+                     container = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top"),
+                     content = container.querySelector("p")
                     
+                    edit.classList.add("form")
 
-
+                 edit.innerHTML = ` 
                     <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <button class="btn btn-outline-secondary editPostBtn" type="button" id="button-addon1" id="">Submit</button>
                     </div>
                     <textarea class="form-control" aria-label="With textarea">${content.innerText}</textarea>
-                  </div>
+                    </div>
                  `
                 $(edit).insertAfter(buttons)
-                
+                }
             }
         })
     }
 
 
-    newPost=()=> {
+    newPost=(title, content, img) => {
 
+        function pad(n) {
+            return n<10 ? '0'+n : n;
+        }
+
+        let currentDate = new Date(),
+            date = currentDate.getDate(),
+            month = currentDate.getMonth(),
+            year = currentDate.getFullYear(),
+            dateString = year + "-" + pad(month + 1) + "-" +  pad(date);
         
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title.value,
+                content: content.value,
+                user_id: currentUserId,
+                img_url: img.value,
+                date: dateString
+
+            })
+        }
+
+        fetch(URL, options)
+            .then(response => {
+                    window.location.reload()
+            })
+
     }
+
+
 
     editHandler()
     deleteHandler()
