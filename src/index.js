@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     const URL = "http://localhost:3000/posts/"
     const LIKE_URL = "http://localhost:3000/likes/"
     const COMMENTS_URL = "http://localhost:3000/comments/"
+    const USER_URL = "http://localhost:3000/users/"
 
     function getPosts() {
         const postContainer = document.querySelector(".post-container")
@@ -267,9 +268,27 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     const profileHandler = () => {
         document.addEventListener('click', function(e) {
-            if (e.target.textContent === "Profile") {}
+            if (e.target.textContent === "Profile") {
+                
+                fetch(USER_URL + currentUserId)
+                .then(res => res.json())
+                .then(user => renderUser(user))
+
+            }
             
         })
+    }
+
+    function renderUser(user) {
+        let profBox = document.querySelector(`#profile`)
+        let body = profBox.querySelector(".card-body")
+
+        body.innerHTML = `
+                <h6>Name: ${user.name} </h6>
+                <br>
+                <p>Email: ${user.email}</p>
+                <p>Number of posts: ${user.posts.length}</p>
+                `
     }
 
 
