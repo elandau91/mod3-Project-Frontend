@@ -11,7 +11,7 @@ body {
 .card {
     z-index: 5;
     margin: 3% 10%;
-    box-shadow: 5px 10px 8px #888888;
+    box-shadow: 0 2.5rem 2rem -2rem hsl(200 50% 20% / 40%);
 
 }
 
