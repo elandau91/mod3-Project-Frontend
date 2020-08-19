@@ -4,21 +4,27 @@
 
 body {
     color: black;
+    z-index: 10;
     /* padding-top: %; */
 }
 
 .card {
+    z-index: 5;
     margin: 3% 10%;
+    box-shadow: 5px 10px 8px #888888;
+
 }
 
-/* .profile-container {
+.profile-container {
     margin: 10% 10%;
-} */
+    /* border: 1px solid; */
+}
 
 .btn.btn-primary {
     display: inline-block;
     /* margin-left: 90%; */
     transition: background-color 0.5s ease-in-out;
+    /* box-shadow: 2px 2px 2px; */
 }
 
 .btn.btn-primary:hover {
@@ -30,6 +36,7 @@ body {
     display: inline-block;
     /* margin-left: 90%; */
     transition: background-color 0.5s ease-in-out;
+    /* box-shadow: 2px 2px 2px; */
 }
 
 .btn.btn-secondary:hover {
@@ -80,6 +87,7 @@ li {
 
 #post-content {
     margin: auto;
+    z-index: 10;
 }
 
 #pageNav {
@@ -91,6 +99,15 @@ li {
 }
 
 textarea {
-    resize: horizontal;
-    width: 90%;
+    resize: horizontal vertical;
+    width: 95%;
+}
+
+.about-us {
+    margin-left: 75%;
+    display: inline-block;
+}
+
+.llp {
+    display: inline-block;
 }

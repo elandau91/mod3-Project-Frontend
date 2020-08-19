@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         postCard.dataset.id = post.id
 
         postCard.innerHTML = `
+        
         <div class="box stack-top">
         <h5 class="card-header">${post.title}</h5>
             <div class="card-body">
@@ -145,11 +146,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
     }
 
     function postLike(postBox) {
-        const postId = postBox.dataset.id
+        const postId = postBox.parentElement.dataset.id
         
        let likes = postBox.querySelector('.card-title.likes > span')
        likes.innerText = `${parseInt(likes.innerText) +1}`
-
+       
         const options = {
             method: "POST",
             headers: {
@@ -170,18 +171,19 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     function submitHandler() {
         document.addEventListener('click', function(e) {
-           
+  
             if (e.target.value === "Submit") {
                 e.preventDefault()
                 let newComment = e.target.parentElement.querySelector('textarea') //.value for value
                 console.log(newComment)
 
                 postComment(newComment)
-            } else if (e.target.value === "Submit Edits") {
+            } else if (e.target.className === "btn btn-outline-secondary editPostBtn") {
                 e.preventDefault()
-                let id = e.target.parentElement.parentElement.parentElement.parentElement.dataset.id
+
+                let id = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.id
                 let oldData = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("p")
-                let edits = e.target.parentElement.querySelector("textarea").value
+                let edits = e.target.parentElement.parentElement.parentElement.querySelector('.form-control').value
                 
                 editPost(edits, id, oldData)
             }
@@ -267,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
                     let confirmDelete = document.createElement("button")
                     confirmDelete.classList.add("btn-warning", "btn")
-                    confirmDelete.innerText = "Confirm Deletion?"
+                    confirmDelete.innerText = "Delete Post?"
 
 
                     let cancelDelete = document.createElement("button")
@@ -318,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         document.addEventListener("click", function(e) {
             if (e.target.matches(".btn.btn-success") || e.target.matches(".fa.fa-edit")) {
                  let buttons = e.target.parentElement.parentElement.parentElement.querySelector(".buttons")
-                let container = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top")
+                 let container = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top")
                  let title = container.querySelector(".card-header")
                  let name = container.querySelector(".card-title")
                  let date = container.querySelector("em")
@@ -329,17 +331,20 @@ document.addEventListener("DOMContentLoaded", function(e) {
                  edit.classList.add("form")
                  edit.innerHTML = `                  
                     
-                    <label for="content">Content:</label><br>
-                    <textarea type="text" id="content" name="content">${content.innerText}</textarea>
-                    <br>
-                    <input type="submit" value="Submit Edits">
+
+
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary editPostBtn" type="button" id="button-addon1" id="">Submit</button>
+                    </div>
+                    <textarea class="form-control" aria-label="With textarea">${content.innerText}</textarea>
+                  </div>
                  `
                 $(edit).insertAfter(buttons)
                 
             }
         })
     }
-
 
 
     newPost=()=> {

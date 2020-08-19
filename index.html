@@ -40,7 +40,7 @@
     </nav>
 
 
-
+    <section>
     <div id="pageNav" class="carousel slide" data-wrap="false">
 
       <div class="carousel-inner">
@@ -55,21 +55,34 @@
           <div class="card">
             <h5 class="card-header">New Post</h5>
               <div class="card-body">
-                <form>
-                  <input type="textarea" id="post-content" name="content"><br>
-                  <input type="submit">
-                </form>
+                <!-- <form>
+                  <textarea type="text" id="post-content" name="content"></textarea><br>
+                  <input type="submit"> -->
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">Submit</button>
+                    </div>
+                    <textarea class="form-control" aria-label="With textarea"></textarea>
+                  </div>
+                <!-- </form> -->
               </div>
           </div>
         </div>
 
         <div class="carousel-item">
-          <!-- PROFILE PAGE GOES HERE -->
-          <div class="profile-container">
-            <h5 class="card-header">Profile Page</h5>
-            <div class="card-body">
-              <h5 class="card-title" id='username'>Bob</h5>
-            </div>
+          <div class="card">
+            <h5 class="card-header">Profile</h5>
+              <div class="card-body">
+              </div>
+          </div>
+        </div>
+
+
+        <div class="carousel-item">
+          <div class="card">
+            <h5 class="card-header">About Us</h5>
+              <div class="card-body">
+              </div>
           </div>
         </div>
 
@@ -87,8 +100,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
+      <div class="fadeout"></div>
+    </section>
     <div class="card-footer fixed-bottom text-muted bg-dark">
-      © Blog App LLC
+      <p class="llp">© Blog App LLP</p><p class="about-us" href="#" role="button" data-slide-to="3" data-target="#pageNav">About Us</p>             
     </div>
 
   </body>
