@@ -52,6 +52,15 @@ body {
     margin-left: 90%;
 }
 
+.post-count {
+    margin-left: 70%;
+    display: inline;
+}
+
+.user-name {
+    display: inline-block;
+}
+
 li {
     list-style-type: none;
 }
@@ -117,6 +126,13 @@ textarea {
 img {
     width: 200px;
     height: 200px;
+}
+
+#icon {
+    width: 32px;
+    height: 32px;
+    -webkit-filter: invert(1);
+   filter: invert(1);
 }
 
 table, th, td {
