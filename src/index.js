@@ -1,6 +1,7 @@
-const currentPosts = [];
+let currentPosts = [];
+let sortedPosts = [];
 let currentUserId;
-let currentUserName = 'Bob';
+let currentUserName;
 
 
 document.addEventListener("DOMContentLoaded", function(e) {
@@ -11,27 +12,34 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     function getPosts() {
         const postContainer = document.querySelector(".post-container")
+            postContainer.innerHTML = ''
+            currentPosts = []
+            fetch(URL)
+            .then(res => res.json())
+            .then(posts => {
+                posts.forEach(post => {
+                currentPosts.push(post)
+                })
+                sortedPosts = currentPosts.sort((a, b) => parseInt(b.date.split("-").join("")) - parseInt(a.date.split("-").join("")))
         
-        fetch(URL)
-        .then(res => res.json())
-        .then(posts => {
-            posts.forEach(post => {
-            currentPosts.push(post)
+                sortedPosts.forEach(post => renderPost(post, postContainer))
             })
-        let sortedPosts = currentPosts.sort((a, b) => parseInt(b.date.split("-").join("")) - parseInt(a.date.split("-").join("")))
-       
-            sortedPosts.forEach(post => renderPost(post, postContainer))
-        })
     }
 
     function renderPost(post, postContainer) {
               currentUserId = post.user_id
+            
+            //apply user fetch here and .then everything in function below for dynamic user?
+            fetch(USER_URL + currentUserId)
+            .then(res => res.json())
+            .then(user => {
+                currentUserName = user.name
+            
 
         const postCard = document.createElement("div") 
 
               postCard.classList.add("card")
               postCard.dataset.id = post.id
-
 
             $('[data-toggle="popover-hover"]').popover({
                 html: true,
@@ -45,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
         <div class="box stack-top">
         <h5 class="card-header">${post.title}</h5>
             <div class="card-body">
-              <h5 class="card-title" id='username'>Bob</h5>
+              <h5 class="card-title" id='username'>${currentUserName}</h5>
               <h6 class="card-title likes" id='username'>Likes: <span>${post.likes.length}</span></h6>
               <h6 class="card-title" id='date'><em>${post.date}</em></h6>
               <p class="card-text">${post.content}</p>
@@ -74,10 +82,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
                 commentUl.appendChild(commentCont)
                 commentUl.appendChild(commentName)
-                commentUl.appendChild(commentHr)
- 
-                
-
+                commentUl.appendChild(commentHr)      
+         
         }   
 
         let addCommentBtn = document.createElement('a')
@@ -87,6 +93,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
             commentUl.appendChild(addCommentBtn)
             commentUl.style.display='none'
             postContainer.append(postCard)
+          
+        })
+        
     }
 
     let commentButtonHandler = () => {
@@ -202,10 +211,41 @@ document.addEventListener("DOMContentLoaded", function(e) {
                     img = document.querySelector('#basic-url')
                     newPost(title, content, img)
 
+            } else if(e.target.name === "edit-user-submit") {
+                let form = e.target.parentElement.parentElement.parentElement,
+                    userEmail = form.querySelector("#user-email").value,
+                    userName = form.querySelector("#user-name").value
+
+                updateUser(form, userEmail, userName)    
             }
 
         })
 
+    }
+
+    function updateUser(form, userEmail, userName) {
+
+        const options = {
+            method: "PATCH",
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json"
+            },
+            body: JSON.stringify({
+                name: userName,
+                email: userEmail
+            })
+        }
+
+        fetch(USER_URL + currentUserId, options)
+        .then(res => {
+            currentUserName = userName
+            form.remove()
+            getUser(currentUserId)
+            
+            getPosts()
+            //window.location.reload()
+        })
     }
 
     const editPost=(newContent, postid, oldData)=> {
@@ -270,24 +310,63 @@ document.addEventListener("DOMContentLoaded", function(e) {
         document.addEventListener('click', function(e) {
             if (e.target.textContent === "Profile") {
                 
-                fetch(USER_URL + currentUserId)
-                .then(res => res.json())
-                .then(user => renderUser(user))
+                getUser(currentUserId)
 
+            } else if (e.target.matches("#edit-prof")) {
+                let editProf = e.target
+                let userName = editProf.parentElement.querySelector(".user-name").querySelector("span")
+                let userEmail = editProf.parentElement.querySelector(".user-email").querySelector("span")
+                
+                renderEditProfile(userName, userEmail, editProf)
+                editProf.id = "del-prof"
+
+            } else if (e.target.matches("#del-prof")) {
+                let editButton = e.target
+                let form = editButton.nextElementSibling
+                form.remove()
+                editButton.id = "edit-prof"
             }
             
         })
     }
 
+    function getUser(currentUserId) {
+        fetch(USER_URL + currentUserId)
+            .then(res => res.json())
+            .then(user => renderUser(user))
+    }
+
+    function renderEditProfile(userName, userEmail, editProf) {
+        let editProfForm = document.createElement("form")
+
+        editProfForm.innerHTML = `
+        <br>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id='user-name' value="${userName.innerText}">
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id='user-email' value="${userEmail.innerText}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2" name="edit-user-submit">Edit User</button>
+            </div>
+        </div>
+        `
+        
+        $(editProfForm).insertAfter(editProf)
+    }
+
     function renderUser(user) {
         let profBox = document.querySelector(`#profile`)
         let body = profBox.querySelector(".card-body")
+        currentUserName = user.name
 
         body.innerHTML = `
-                <h6>Name: ${user.name} </h6>
+                <h6 class ="user-name" >Name: <span>${user.name}</span> </h6>
+                <p class="post-count" >Number of posts: ${user.posts.length}</p>
                 <br>
-                <p>Email: ${user.email}</p>
-                <p>Number of posts: ${user.posts.length}</p>
+                <p class= "user-email" >Email: <span>${user.email}</span></p>
+                <br>
+                <a href="#" id="edit-prof" class="fa fa-edit fa-lg"></a>
                 `
     }
 
@@ -361,12 +440,15 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 } else {
                  let edit = document.createElement("form"),
                      buttons = e.target.parentElement.parentElement.parentElement.querySelector(".buttons"),
-                     container = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top"),
+                     container = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(".box.stack-top"),
                      content = container.querySelector("p")
+
+                     
                     
                     edit.classList.add("form")
 
                  edit.innerHTML = ` 
+                    <br>
                     <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <button class="btn btn-outline-secondary editPostBtn" type="button" id="button-addon1" id="">Submit</button>
