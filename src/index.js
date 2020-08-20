@@ -4,6 +4,7 @@ let currentUserId;
 let currentUserName;
 
 
+
 document.addEventListener("DOMContentLoaded", function(e) {
     const URL = "http://localhost:3000/posts/"
     const LIKE_URL = "http://localhost:3000/likes/"
@@ -30,65 +31,67 @@ document.addEventListener("DOMContentLoaded", function(e) {
               currentUserId = post.user_id
             
             //apply user fetch here and .then everything in function below for dynamic user?
-            fetch(USER_URL + currentUserId)
-            .then(res => res.json())
-            .then(user => {
-                currentUserName = user.name
+        fetch(USER_URL + currentUserId)
+        .then(res => res.json())
+        .then(user => {
+            currentUserName = user.name
             
+            let avatarHolder = document.querySelector("#avatar")
+            avatarHolder.src = user.avatar
+            
+            const postCard = document.createElement("div") 
 
-        const postCard = document.createElement("div") 
+            postCard.classList.add("card")
+            postCard.dataset.id = post.id
 
-              postCard.classList.add("card")
-              postCard.dataset.id = post.id
+                $('[data-toggle="popover-hover"]').popover({
+                    html: true,
+                    trigger: 'hover',
+                    placement: 'bottom',
+                    content: function () { return '<img src="' + $(this).data('img') + '" />'; }
+                });
 
-            $('[data-toggle="popover-hover"]').popover({
-                html: true,
-                trigger: 'hover',
-                placement: 'bottom',
-                content: function () { return '<img src="' + $(this).data('img') + '" />'; }
-              });
+            postCard.innerHTML = `
+                
+                <div class="box stack-top">
+                <h5 class="card-header">${post.title}</h5>
+                    <div class="card-body">
+                    <h5 class="card-title" id='username'>${currentUserName}</h5>
+                    <h6 class="card-title likes" id='username'>Likes: <span>${post.likes.length}</span></h6>
+                    <h6 class="card-title" id='date'><em>${post.date}</em></h6>
+                    <p class="card-text">${post.content}</p>
+                    <a id="popover" class="fa fa-image fa-lg" rel="popover" data-toggle="popover-hover" data-placement="bottom" data-img="${post.img_url}"></a>
+                    <div class="buttons" dataset-id="${post.id}">
+                        <a href="#" class="fa fa-hear fa-heart fa-lg"></a>
+                        <a href="#" class="fa fa-comment fa-lg"></a>
+                        <a href="#" class="fa fa-edit fa-lg"></a>
+                        <a href="#" class="fa fa-trash fa-lg"></a>
+                    </div>
+                    <ul id="comments">
+                    </ul>
+                    </div>
+                </div>
+                `
 
-        postCard.innerHTML = `
-        
-        <div class="box stack-top">
-        <h5 class="card-header">${post.title}</h5>
-            <div class="card-body">
-              <h5 class="card-title" id='username'>${currentUserName}</h5>
-              <h6 class="card-title likes" id='username'>Likes: <span>${post.likes.length}</span></h6>
-              <h6 class="card-title" id='date'><em>${post.date}</em></h6>
-              <p class="card-text">${post.content}</p>
-              <a id="popover" class="fa fa-image fa-lg" rel="popover" data-toggle="popover-hover" data-placement="bottom" data-img="${post.img_url}"></a>
-              <div class="buttons" dataset-id="${post.id}">
-                <a href="#" class="fa fa-hear fa-heart fa-lg"></a>
-                <a href="#" class="fa fa-comment fa-lg"></a>
-                <a href="#" class="fa fa-edit fa-lg"></a>
-                <a href="#" class="fa fa-trash fa-lg"></a>
-              </div>
-              <ul id="comments">
-              </ul>
-            </div>
-            </div>
-        `
+            let commentUl = postCard.querySelector('ul')
 
-        let commentUl = postCard.querySelector('ul')
+                for (const comment of post.comments) {
+                    let commentCont = document.createElement('li'),
+                        commentHr = document.createElement('hr'),
+                        commentName = document.createElement('p');
 
-        for (const comment of post.comments) {
-            let commentCont = document.createElement('li'),
-                commentHr = document.createElement('hr'),
-                commentName = document.createElement('p');
+                        commentCont.textContent = comment.content
+                        commentName.innerHTML = `<em> - ${comment.name}</em>`
 
-                commentCont.textContent = comment.content
-                commentName.innerHTML = `<em> - ${comment.name}</em>`
+                        commentUl.appendChild(commentCont)
+                        commentUl.appendChild(commentName)
+                        commentUl.appendChild(commentHr)      
+                
+                }   
 
-                commentUl.appendChild(commentCont)
-                commentUl.appendChild(commentName)
-                commentUl.appendChild(commentHr)      
-         
-        }   
-
-        let addCommentBtn = document.createElement('a')
-            addCommentBtn.className = 'btn btn-dark'
-            addCommentBtn.textContent= 'Add Comment'
+            let addCommentBtn = document.createElement('a')
+                addCommentBtn.className = 'btn btn-dark'
+                addCommentBtn.textContent= 'Add Comment'
 
             commentUl.appendChild(addCommentBtn)
             commentUl.style.display='none'
@@ -215,15 +218,16 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 let form = e.target.parentElement.parentElement.parentElement,
                     userEmail = form.querySelector("#user-email").value,
                     userName = form.querySelector("#user-name").value
-
-                updateUser(form, userEmail, userName)    
+                    userAvatar = form.querySelector("#avatar-url").value
+                console.log(userAvatar)
+                updateUser(form, userEmail, userName, userAvatar)    
             }
 
         })
 
     }
 
-    function updateUser(form, userEmail, userName) {
+    function updateUser(form, userEmail, userName, userAvatar) {
 
         const options = {
             method: "PATCH",
@@ -233,7 +237,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
             },
             body: JSON.stringify({
                 name: userName,
-                email: userEmail
+                email: userEmail,
+                avatar: userAvatar
             })
         }
 
@@ -282,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
                 user_id: parseInt(currentUserId),
                 post_id: parseInt(postId),
                 content: newComment.value,
-                name: "Bob"
+                name: currentUserName
             })
         }
 
@@ -338,12 +343,19 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     function renderEditProfile(userName, userEmail, editProf) {
         let editProfForm = document.createElement("form")
+        let avatarHolder = document.querySelector("#avatar")
 
         editProfForm.innerHTML = `
         <br>
         <div class="input-group mb-3">
             <input type="text" class="form-control" id='user-name' value="${userName.innerText}">
         </div>
+        <div class="input-group mb-3">
+                      <input type="text" class="form-control" id="avatar-url" aria-describedby="basic-addon3" value="${avatarHolder.src}">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon3">https://image.com/url/</span>
+                      </div>
+                    </div>
         <div class="input-group mb-3">
             <input type="text" class="form-control" id='user-email' value="${userEmail.innerText}">
             <div class="input-group-append">
